@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 import yaml
 import os
 from scripts.renamer import renamer
+from scripts import make_barplot
 
 locationrepo = os.path.dirname(os.path.abspath(__file__))
 
@@ -111,6 +112,8 @@ def main(command_line=None):
         if exitstatus > 0:
             sys.exit("pre-workflow crashed")
         os.system(f"snakemake -p --cores {args.cores} --use-conda {args.smkparams} --notemp --keep-going")
+        xlsxdir = os.path.join(args.outdir, 'reports')
+        make_barplot.main(xlsxdir, args.outdir)
 
     else:
         parser.print_usage()

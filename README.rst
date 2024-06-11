@@ -1,7 +1,3 @@
-=======
-MABA16S
-=======
-
 NOTE:
 --------
 This forked repo extends the original MABA16S pipeline with a stacked barplot visualizing relative abundances of all samples.  
@@ -12,6 +8,11 @@ The only additional dependencies required are plotly and openpyxl. It is recomme
     conda create -n maba snakemake plotly openpyxl
 
 It is important to provide an absolute path to the output directory. If you provide a relative path, the pipeline will fail.
+
+
+=======
+MABA16S
+=======
 
 .. image:: https://img.shields.io/pypi/v/maba16s.svg
         :target: https://pypi.python.org/pypi/maba16s

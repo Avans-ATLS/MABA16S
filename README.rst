@@ -13,6 +13,9 @@ The only additional dependencies required are plotly and openpyxl. It is recomme
 
 It is important to provide an absolute path to the output directory. If you provide a relative path, the pipeline will fail.
 
+Documentation:
+--------------
+
 .. image:: https://img.shields.io/pypi/v/maba16s.svg
         :target: https://pypi.python.org/pypi/maba16s
 

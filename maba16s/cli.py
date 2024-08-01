@@ -103,7 +103,7 @@ def main(command_line=None):
                 samples=args.input_files,
                 outdir=args.outdir,
                 )
-
+        outdir = os.path.abspath(args.outdir)
         os.chdir(f"{locationrepo}")
 
         if args.smkparams == None:
@@ -112,8 +112,10 @@ def main(command_line=None):
         if exitstatus > 0:
             sys.exit("pre-workflow crashed")
         os.system(f"snakemake -p --cores {args.cores} --use-conda {args.smkparams} --notemp --keep-going")
-        xlsxdir = os.path.join(args.outdir, 'reports')
-        make_barplot.main(xlsxdir, args.outdir)
+        xlsxdir = os.path.join(outdir, 'reports')
+        make_barplot.main(xlsxdir, outdir)
+        make_barplot.crispatus_presence_absence(os.path.join(outdir, 'species_percentages.csv'), outdir)
+        
 
     else:
         parser.print_usage()

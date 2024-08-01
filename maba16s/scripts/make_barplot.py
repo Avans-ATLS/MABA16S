@@ -3,6 +3,7 @@ import argparse
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
+import matplotlib.pyplot as plt
 
 def convert_xlsx_to_csv(input_folder, output_folder):
     # Create the output folder if it doesn't exist
@@ -102,7 +103,7 @@ def plot_stacked_bar(input_csv, output_html, output_csv):
     fig.write_html(output_html)
 
     # Save the percentages of each species to a CSV file
-    df_consolidated.to_csv(output_csv, index=False, float_format='%.2f%%')
+    df_consolidated.to_csv(output_csv, index=False, float_format='%.2f')
 
 def main(input_folder, output_folder):
     # Convert .xlsx files to .csv files
@@ -121,3 +122,47 @@ def main(input_folder, output_folder):
     plot_output_file = os.path.join(output_folder, "stacked_bar_plot.html")
     plot_csv_file = os.path.join(output_folder, "species_percentages.csv")
     plot_stacked_bar(merged_file, plot_output_file, plot_csv_file)
+
+
+def plot_boolean_forest(pa: dict[str, bool], outpath: str):
+    # set up plot layout
+    num_samples = len(pa)
+    cols = 4
+    rows = (num_samples + cols - 1) // cols
+    fig, axes = plt.subplots(rows, cols, figsize=(cols * 2, rows * 2))
+    axes = axes.flatten()
+
+    # plot each sample
+    for i, (key, value) in enumerate(pa.items()):
+        ax = axes[i]
+        ax.set_title(key)
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+        if value:
+            circle = plt.Circle((0.5, 0.5), 0.4, color='green', ec='black', lw=2)
+            ax.text(0.5, 0.5, 'Dominant', ha='center', va='center', fontsize=12)
+        else:
+            circle = plt.Circle((0.5, 0.5), 0.4, color='cyan', ec='black', lw=2)
+            ax.text(0.5, 0.5, 'Niet dominant', ha='center', va='center', fontsize=12)
+        
+        ax.add_patch(circle)
+    
+    # remove empty subplots
+    for i in range(num_samples, rows * cols):
+        fig.delaxes(axes[i])
+    
+    plt.tight_layout()
+    plt.savefig(outpath)
+
+def crispatus_presence_absence(input_csv, outdir):
+    pa = {}
+    df = pd.read_csv(input_csv)
+    for bc in df['Barcode'].unique():
+        if 'Lactobacillus crispatus' in df[df['Barcode'] == bc]['blast_hit'].unique():
+            percentage = df[df['Barcode'] == bc][df[df['Barcode'] == bc]['blast_hit'] == 'Lactobacillus crispatus']['Percentage'].values[0]
+            if percentage > 60:
+                pa[bc] = True
+            else: 
+                pa[bc] = False
+    plot_boolean_forest(pa, os.path.join(outdir, 'crispatus_presence_absence.png'))

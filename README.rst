@@ -9,7 +9,7 @@ The only additional dependencies required are plotly and openpyxl. It is recomme
 
 .. code-block:: bash
 
-    conda create -n maba snakemake plotly openpyxl
+    conda create -n maba snakemake plotly openpyxl matplotlib
 
 It is important to provide an absolute path to the output directory. If you provide a relative path, the pipeline will fail.
 

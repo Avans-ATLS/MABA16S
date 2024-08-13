@@ -94,14 +94,14 @@ def main(command_line=None):
     args = parser.parse_args(command_line)
     if args.mode == "rename":
         renamer(
-                input_file=args.input_directory,
-                spreadsheet=args.spreadsheet
+                barcode_dir=args.input_directory,
+                metadata=args.spreadsheet
                 )
 
     elif args.mode == "snakemake":
         snakemake_in(
                 samples=args.input_files,
-                outdir=args.outdir,
+                outdir=os.path.abspath(args.outdir),
                 )
         outdir = os.path.abspath(args.outdir)
         os.chdir(f"{locationrepo}")
